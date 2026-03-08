@@ -1,183 +1,86 @@
-# Payment Collection App – Django + DRF Backend
+# PCA Backend - Django REST Framework
 
-A REST API backend for the Payment Collection App, built with **Django** and **Django REST Framework (DRF)**.
-
----
-
-## Project Structure
-
-```
-pca_backend/
-├── manage.py
-├── requirements.txt
-├── db.sqlite3              ← auto-generated after migrations
-├── pca_backend/            ← Django settings & config
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── customers/              ← Customers app
-│   ├── models.py
-│   ├── serializers.py
-│   ├── views.py
-│   ├── urls.py
-│   └── admin.py
-└── payments/               ← Payments app
-    ├── models.py
-    ├── serializers.py
-    ├── views.py
-    ├── urls.py
-    └── admin.py
-```
+The robust API engine for the Payment Collection App (PCA). Built to handle loan management, customer data, and secure payment processing.
 
 ---
 
-## Setup & Run Locally
+## 🚀 API Features
 
-### 1. Create a virtual environment
-```bash
-python -m venv venv
-venv\Scripts\activate      # Windows
-source venv/bin/activate   # Mac/Linux
-```
+- **JWT Auth**: Uses `djangorestframework-simplejwt` for secure, stateless authentication.
+- **RESTful Endpoints**: Clean API structure for Customers and Payments.
+- **MySQL Integration**: Persistent storage for loan and payment records.
+- **Automated Deployment**: CI/CD ready via GitHub Actions and Gunicorn.
 
-### 2. Install dependencies
-```bash
-pip install -r requirements.txt
-```
+---
 
-### 3. Run migrations
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+## 🚪 API Endpoints
 
-### 4. Create a superuser (for admin panel)
+### Authentication
+- `POST /api/token/`: Obtain JWT Access & Refresh tokens.
+- `POST /api/token/refresh/`: Refresh an expired access token.
+
+### Customers
+- `GET /api/customers/`: List all customers (Auth required).
+- `POST /api/customers/`: Create a new customer record.
+
+### Payments
+- `POST /api/payments/`: Record a new EMI payment.
+- `GET /api/payments/<account_number>/`: Retrieve payment history for an account.
+
+---
+
+## 🔑 Admin Setup
+
+To log in to the system, you must have a superuser account. Create one via the EC2 terminal:
+
 ```bash
 python manage.py createsuperuser
 ```
 
-### 5. Start the development server
+**Default Evaluation Credentials:**
+- **Username**: `admin`
+- **Password**: `admin123`
+
+---
+
+## 🛠️ Installation & Deployment
+
+### 1. Local Setup
 ```bash
+# Clone
+git clone https://github.com/astradevop/pca_backend.git
+cd PCA_BACKEND
+
+# Environment
+python -m venv venv
+source venv/bin/activate  # venv\Scripts\activate on Windows
+pip install -r requirements.txt
+
+# Database
+python manage.py makemigrations
+python manage.py migrate
+
+# Server
 python manage.py runserver
 ```
 
-Server runs at: `http://127.0.0.1:8000`
+### 2. Live Server Architecture
+- **Web Server**: Nginx (Reverse Proxy)
+- **WSGI**: Gunicorn (Unix Socket)
+- **Database**: MySQL Server
+- **OS**: Ubuntu 22.04 LTS (AWS EC2)
 
 ---
 
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/customers/` | List all customers and their loan details |
-| POST | `/api/payments/` | Submit a payment for a customer |
-| GET | `/api/payments/<account_number>/` | Get payment history for an account |
-
----
-
-### GET `/api/customers/`
-
-Returns a list of all customers.
-
-**Response (200 OK):**
-```json
-[
-  {
-    "id": 1,
-    "account_number": "ACC001",
-    "issue_date": "2024-01-15",
-    "interest_rate": "8.50",
-    "tenure": 24,
-    "emi_due": "5000.00"
-  }
-]
-```
+## ⚙️ CI/CD (GitHub Actions)
+The backend is automatically deployed to AWS on every push to the `main` branch. The workflow:
+1. SSH into EC2.
+2. Pull latest code.
+3. Install dependencies.
+4. Apply migrations.
+5. Restart the Gunicorn service.
 
 ---
 
-### POST `/api/payments/`
-
-Submit an EMI payment.
-
-**Request Body:**
-```json
-{
-  "account_number": "ACC001",
-  "payment_amount": 5000.00,
-  "status": "completed"
-}
-```
-
-**Response (201 Created):**
-```json
-{
-  "message": "Payment recorded successfully.",
-  "payment": {
-    "id": 1,
-    "account_number": "ACC001",
-    "payment_date": "2026-03-07",
-    "payment_amount": "5000.00",
-    "status": "completed"
-  }
-}
-```
-
-**Error (400 – invalid account):**
-```json
-{
-  "account_number": ["Customer with this account number does not exist."]
-}
-```
-
----
-
-### GET `/api/payments/<account_number>/`
-
-Retrieve payment history for a specific account.
-
-**Response (200 OK):**
-```json
-[
-  {
-    "id": 1,
-    "account_number": "ACC001",
-    "payment_date": "2026-03-07",
-    "payment_amount": "5000.00",
-    "status": "completed"
-  }
-]
-```
-
-**Response (404 – no history):**
-```json
-{
-  "message": "No payment history found for account ACC999."
-}
-```
-
----
-
-## Admin Panel
-
-Visit `http://127.0.0.1:8000/admin/` to manage customers and payments via the Django admin interface.
-
----
-
-## Database
-
-- Default: **SQLite** (`db.sqlite3`) – zero config, great for development
-- To switch to **PostgreSQL**, update `DATABASES` in `pca_backend/settings.py`:
-
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'your_db_name',
-        'USER': 'your_db_user',
-        'PASSWORD': 'your_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-```
-Then install: `pip install psycopg2-binary`
+## 📄 License
+MIT License.
