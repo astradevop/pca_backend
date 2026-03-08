@@ -19,7 +19,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # Navigate to the backend directory
-            cd ~/PCA_BACKEND
+            cd ~/PCA_BACKEND-main
             
             # Pull latest code
             git pull origin main
