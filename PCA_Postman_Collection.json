@@ -1,0 +1,96 @@
+{
+	"info": {
+		"_postman_id": "7a356391-b3b4-4b52-9da8-a0b81e4b3152",
+		"name": "Payment Collection App (PCA)",
+		"description": "API collection for testing the Django + DRF backend of the Payment Collection App.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. GET All Customers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/customers/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"customers",
+						""
+					]
+				},
+				"description": "Retrieves loan details of all customers."
+			},
+			"response": []
+		},
+		{
+			"name": "2. POST Create Payment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"account_number\": \"ACC123\",\r\n    \"payment_amount\": 1500.00,\r\n    \"status\": \"completed\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/payments/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"payments",
+						""
+					]
+				},
+				"description": "Allows a customer to make a payment for their personal loan."
+			},
+			"response": []
+		},
+		{
+			"name": "3. GET Payment History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/payments/ACC123/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"payments",
+						"ACC123",
+						""
+					]
+				},
+				"description": "Retrieves the payment history for a specific account."
+			},
+			"response": []
+		}
+	]
+}
